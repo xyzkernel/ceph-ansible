@@ -13,6 +13,7 @@
   - iscsigws
   - iscsi-gws # for backward compatibility only!
   - mgrs
+  - ceph-grafana
 
   gather_facts: false
   become: True
@@ -118,6 +119,9 @@
     - import_role:
         name: ceph-handler
     - import_role:
+        name: ceph-node-exporter
+      when: dashboard_enabled
+    - import_role:
         name: ceph-container-common
     - import_role:
         name: ceph-config
@@ -162,6 +166,9 @@
     - import_role:
         name: ceph-handler
     - import_role:
+        name: ceph-node-exporter
+      when: dashboard_enabled
+    - import_role:
         name: ceph-container-common
     - import_role:
         name: ceph-config
@@ -202,6 +209,9 @@
     - import_role:
         name: ceph-handler
     - import_role:
+        name: ceph-node-exporter
+      when: dashboard_enabled
+    - import_role:
         name: ceph-container-common
     - import_role:
         name: ceph-config
@@ -240,6 +250,9 @@
       tags: ['ceph_update_config']
     - import_role:
         name: ceph-handler
+    - import_role:
+        name: ceph-node-exporter
+      when: dashboard_enabled
     - import_role:
         name: ceph-container-common
     - import_role:
@@ -280,6 +293,9 @@
     - import_role:
         name: ceph-handler
     - import_role:
+        name: ceph-node-exporter
+      when: dashboard_enabled
+    - import_role:
         name: ceph-container-common
     - import_role:
         name: ceph-config
@@ -318,6 +334,9 @@
       tags: ['ceph_update_config']
     - import_role:
         name: ceph-handler
+    - import_role:
+        name: ceph-node-exporter
+      when: dashboard_enabled
     - import_role:
         name: ceph-container-common
     - import_role:
@@ -358,6 +377,9 @@
     - import_role:
         name: ceph-handler
     - import_role:
+        name: ceph-node-exporter
+      when: dashboard_enabled
+    - import_role:
         name: ceph-container-common
     - import_role:
         name: ceph-config
@@ -396,6 +418,9 @@
       tags: ['ceph_update_config']
     - import_role:
         name: ceph-handler
+    - import_role:
+        name: ceph-node-exporter
+      when: dashboard_enabled
     - import_role:
         name: ceph-container-common
       when:
@@ -439,6 +464,9 @@
       tags: ['ceph_update_config']
     - import_role:
         name: ceph-handler
+    - import_role:
+        name: ceph-node-exporter
+      when: dashboard_enabled
     - import_role:
         name: ceph-container-common
     - import_role:
@@ -488,3 +516,45 @@
       delegate_to: "{{ groups[mon_group_name][0] }}"
       run_once: true
       when: not ceph_status.failed
+
+- hosts: ceph-grafana
+  become: true
+  tasks:
+    - import_role:
+        name: ceph-defaults
+      tags: ['ceph_update_config']
+      when: dashboard_enabled
+    - import_role:
+        name: ceph-facts
+      tags: ['ceph_update_config']
+      when: dashboard_enabled
+    - import_role:
+        name: ceph-handler
+      when: dashboard_enabled
+    - import_role:
+        name: ceph-node-exporter
+      when: dashboard_enabled
+    - import_role:
+        name: ceph-common
+      when: dashboard_enabled
+    - import_role:
+        name: ceph-config
+      tags: ['ceph_update_config']
+      when: dashboard_enabled
+    - import_role:
+        name: ceph-prometheus
+      when: dashboard_enabled
+    - import_role:
+        name: ceph-grafana
+      when: dashboard_enabled
+
+- hosts: '{{ (groups["mgrs"] | default(groups["mons"]))[0] }}'
+  become: true
+  tasks:
+    - import_role:
+        name: ceph-defaults
+      tags: ['ceph_update_config']
+      when: dashboard_enabled
+    - import_role:
+        name: ceph-dashboard
+      when: dashboard_enabled

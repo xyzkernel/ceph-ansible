@@ -18,10 +18,17 @@
   when:
     - container_binary == 'docker'
 
+- name: create a docker network for ceph-dashboard
+  docker_network:
+    name: "{{ dashboard_network_name }}"
+    driver: bridge
+  when: dashboard_enabled
+
 - name: include fetch_image.yml
   include_tasks: fetch_image.yml
   tags:
     - fetch_container_image
+  when: containerized_deployment
 
 - name: get ceph version
   command: >
@@ -31,10 +38,13 @@
   changed_when: false
   check_mode: no
   register: ceph_version
+  when: containerized_deployment
 
 - name: set_fact ceph_version ceph_version.stdout.split
   set_fact:
     ceph_version: "{{ ceph_version.stdout.split(' ')[2] }}"
+  when: containerized_deployment
 
 - name: include release.yml
   include_tasks: release.yml
+  when: containerized_deployment

@@ -8,6 +8,25 @@
   when:
     - ansible_os_family in ['RedHat', 'Suse']
 
+- name: install ceph-grafana-dashboards package on RedHat or SUSE
+  package:
+    name: ceph-grafana-dashboards
+    state: "{{ (upgrade_ceph_packages|bool) | ternary('latest','present') }}"
+  register: result
+  until: result is succeeded
+  when:
+    - ansible_os_family in ['RedHat', 'Suse']
+
+- name: make sure the dashboard module is installed on RedHat or SUSE
+  package:
+    name: 'ceph-mgr-dashboard'
+    state: "{{ (upgrade_ceph_packages|bool) | ternary('latest','present') }}"
+  register: result
+  until: result is succeeded
+  when:
+    - ansible_os_family in ['RedHat', 'Suse']
+    - dashboard_enabled
+
 - name: install ceph mgr for debian
   apt:
     name: ceph-mgr
