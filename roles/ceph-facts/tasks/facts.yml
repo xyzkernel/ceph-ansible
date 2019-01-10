@@ -209,7 +209,7 @@
     devices: "{{ devices | default([]) + [ item.key | regex_replace('^', '/dev/') ] }}"
   with_dict: "{{ ansible_devices }}"
   when:
-    - osd_auto_discovery
+    - osd_auto_discovery|default(False)
     - ansible_devices is defined
     - item.value.removable == "0"
     - item.value.sectors != "0"
