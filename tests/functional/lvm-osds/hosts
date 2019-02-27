@@ -3,3 +3,4 @@ mon0
 
 [osds]
 osd0
+osd1 dmcrypt=True lvm_volumes="[{'data':'data-lv1','journal':'/dev/sdc1','data_vg':'test_group'},{'data':'data-lv2','journal':'journal1','data_vg':'test_group', 'journal_vg':'journals'}]"
