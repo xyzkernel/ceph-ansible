@@ -18,12 +18,6 @@
   when:
     - container_binary == 'docker'
 
-- name: create a docker network for ceph-dashboard
-  docker_network:
-    name: "{{ dashboard_network_name }}"
-    driver: bridge
-  when: dashboard_enabled
-
 - name: include fetch_image.yml
   include_tasks: fetch_image.yml
   tags:
