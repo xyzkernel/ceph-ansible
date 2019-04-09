@@ -7,6 +7,8 @@ auth cluster required = none
 auth service required = none
 auth client required = none
 auth supported = none
+debug bluefs=20
+debug bluestore=20
 {% endif %}
 {% if ip_version == 'ipv6'  %}
 ms bind ipv6 = true

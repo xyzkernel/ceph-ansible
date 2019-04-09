@@ -1,6 +1,6 @@
 ---
 copy_admin_key: True
-user_config: True
+user_config: False
 test:
   name: "test"
   pg_num: "{{ osd_pool_default_pg_num }}"
