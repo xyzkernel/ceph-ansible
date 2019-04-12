@@ -341,7 +341,7 @@
     health_osd_check_retries: 40
     health_osd_check_delay: 30
     upgrade_ceph_packages: True
-    ceph_release: "{{ ceph_stable_release }}"
+    #ceph_release: "{{ ceph_stable_release }}"
 
   hosts:
     - "{{ osd_group_name|default('osds') }}"
